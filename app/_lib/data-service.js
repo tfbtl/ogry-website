@@ -20,16 +20,17 @@ import {
 // GET
 
 export async function getCabin(id) {
-  const { data, error } = await fetchCabin(id);
+  const { getCabinUseCase } = await import("./shared/composition/cabinUseCases");
+  const result = await getCabinUseCase.execute(id);
 
-  // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
-
-  if (error) {
-    notFound();
+  if (!result.ok) {
+    if (result.error.httpStatus === 404) {
+      notFound();
+    }
+    throw new Error(result.error.messageKey);
   }
 
-  return data;
+  return result.data;
 }
 
 export async function getCabinPrice(id) {
@@ -43,13 +44,14 @@ export async function getCabinPrice(id) {
 }
 
 export const getCabins = async function () {
-  const { data, error } = await fetchCabins();
+  const { getCabinsUseCase } = await import("./shared/composition/cabinUseCases");
+  const result = await getCabinsUseCase.execute();
 
-  if (error) {
-    throw new Error("Cabins could not be loaded");
+  if (!result.ok) {
+    throw new Error(result.error.messageKey);
   }
 
-  return ensureArrayData(data, "Cabins could not be loaded");
+  return result.data;
 };
 
 // Guests are uniquely identified by their email address
