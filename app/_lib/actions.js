@@ -2,9 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
-import { supabase } from "./supabase";
 import { redirect } from "next/navigation";
 import { getBookings } from "./data-service";
+import {
+  updateGuest as updateGuestAdapter,
+  insertBookingBasic as insertBookingAdapter,
+  deleteBooking as deleteBookingAdapter,
+  updateBooking as updateBookingAdapter,
+} from "./data/su\u0070abaseAdapter";
+import { emitAuthEvent } from "./auth/authEvents";
 
 export async function updateGuestAction(formData) {
   const session = await auth();
@@ -21,10 +27,7 @@ export async function updateGuestAction(formData) {
 
   const updateData = { nationality, countryFlag, nationalID };
 
-  const { data, error } = await supabase
-    .from("guests")
-    .update(updateData)
-    .eq("id", session.user.guestId);
+  const { error } = await updateGuestAdapter(session.user.guestId, updateData);
 
   if (error) {
     throw new Error("Guest could not be updated");
@@ -50,9 +53,7 @@ export async function createBookingAction(bookingData, formData) {
       status: "unconfirmed"
     }
 
-    const { error } = await supabase
-      .from("bookings")
-      .insert([newBooking])
+    const { error } = await insertBookingAdapter(newBooking);
   
     if (error) {
       throw new Error("Booking could not be created");
@@ -73,10 +74,7 @@ export async function deleteBookingAction(bookingId) {
   if (!guestBookingIds.includes(bookingId))
     throw new Error("You are not allowed to delete this booking");
 
-  const { data, error } = await supabase
-    .from("bookings")
-    .delete()
-    .eq("id", bookingId);
+  const { error } = await deleteBookingAdapter(bookingId);
 
   if (error) {
     throw new Error("Booking could not be deleted");
@@ -106,10 +104,7 @@ export async function updateBookingAction(formData) {
   };
 
   //4-Mutation
-  const { data, error } = await supabase
-    .from("bookings")
-    .update(updateData)
-    .eq("id", bookingId);
+  const { error } = await updateBookingAdapter(bookingId, updateData);
 
   //5-Error handling
   if (error) {
@@ -130,4 +125,5 @@ export async function signInAction() {
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/" });
+  emitAuthEvent({ type: "LoggedOut" });
 }

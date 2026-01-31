@@ -11,6 +11,17 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    files: ["app/_components/**/*.{js,jsx}", "app/(routes)/**/*.{js,jsx}"],
+    rules: {
+      "no-console": "error",
+      "no-restricted-imports": [
+        "error",
+        { patterns: ["**/supabase", "@supabase/supabase-js"] },
+      ],
+      "no-restricted-globals": ["error", "fetch"],
+    },
+  },
 ]);
 
 export default eslintConfig;

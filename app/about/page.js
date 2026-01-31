@@ -1,6 +1,5 @@
 import Image from "next/image";
 import image1 from "@/public/about-1.jpg";
-import { supabase } from "../_lib/supabase";
 import { getCabins } from "../_lib/data-service";
 import Link from "next/link";
 
