@@ -77,12 +77,12 @@ function scanDirectory(dirPath, relativePath = '') {
             checkFile(fullPath, relPath);
           }
         }
-      } catch (err) {
+      } catch {
         // Skip files we can't read (permissions, etc.)
         continue;
       }
     }
-  } catch (err) {
+  } catch {
     // Skip directories we can't read
     return;
   }
@@ -111,7 +111,7 @@ function checkFile(filePath, relativePath) {
         }
       });
     });
-  } catch (err) {
+  } catch {
     // Skip files we can't read
     return;
   }
