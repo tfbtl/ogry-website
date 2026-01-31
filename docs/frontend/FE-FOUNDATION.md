@@ -34,6 +34,10 @@
 - No `Date`, `Map`, `Set`, functions, or `undefined` array items in responses.
 - `clientTimestamp` must be ISO string.
 
+## Google OAuth redirect URI
+- Standard callback URL: `http://localhost:3000/api/auth/callback/google`
+- Google Cloud Console'da bu URL'i authorized redirect URIs listesine ekleyin.
+
 ## rg komutlarıyla doğrulama
 - `rg "supabase" app/_components app/(routes) app/_lib/actions.js app/_lib/data-service.js`
 - `rg "console\\.(log|error|warn)" app/_components app/(routes)`

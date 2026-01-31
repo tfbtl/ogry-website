@@ -8,7 +8,8 @@
     "start": "next start",
     "prod": "next build && next start",
     "prod2": "next build && npx serve@latest out",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:boundaries": "node scripts/validate-boundaries.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
