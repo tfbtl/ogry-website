@@ -108,13 +108,15 @@ export async function getBookedDatesByCabinId(cabinId) {
 }
 
 export async function getSettings() {
-  const { data, error } = await fetchSettings();
+  const { getSettingsUseCase } = await import("./shared/composition/settingsUseCases");
+  const result = await getSettingsUseCase.execute();
 
-  if (error) {
-    throw new Error("Settings could not be loaded");
+  if (!result.ok) {
+    throw new Error(result.error.messageKey);
   }
 
-  return data;
+  // Return Settings object directly (SINGLETON, not array)
+  return result.data;
 }
 
 export async function getCountries() {
